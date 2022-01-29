@@ -65,10 +65,11 @@ resource "aws_key_pair" "webserver-key" {
 }
 
 #Create SG for allowing TCP/80 & TCP/22
-resource "aws_security_group" "sg" {
-  name        = "sg"
+resource "aws_security_group" "sg-webapp" {
+  name        = "sg-webapp"
   description = "Allow TCP/80 & TCP/22"
   vpc_id      = aws_vpc.vpc.id
+
   ingress {
     description = "Allow SSH traffic"
     from_port   = 22
@@ -76,6 +77,7 @@ resource "aws_security_group" "sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   ingress {
     description = "allow traffic from TCP/80"
     from_port   = 80
@@ -83,6 +85,7 @@ resource "aws_security_group" "sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -91,6 +94,41 @@ resource "aws_security_group" "sg" {
   }
 }
 
-output "Webserver-Public-IP" {
-  value = aws_instance.webserver.public_ip
+#Create SG for allowing TCP/8080, TCP/22
+#Create SG for allowing TCP/80 & TCP/22
+resource "aws_security_group" "sg-jenkins" {
+  name        = "sg-jenkins"
+  description = "Allow TCP/8080 & TCP/22"
+  vpc_id      = aws_vpc.vpc.id
+
+  ingress {
+    description = "Allow SSH traffic"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "allow traffic from TCP/8080"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+output "Webserver-webapp-Public-IP" {
+  value = aws_instance.webserver-webapp.public_ip
+}
+
+output "Webserver-jenkins-Public-IP" {
+  value = aws_instance.webserver-jenkins.public_ip
 }
