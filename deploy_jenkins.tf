@@ -25,7 +25,7 @@ resource "aws_instance" "webserver-jenkins" {
             "sudo systemctl daemon-reload",
             "sudo yum install -y terraform",
             "sudo yum install -y ansible",
-            "sudo yum install -y bash-completion",
+            "sudo yum install -y bash-completion awscli",
             "echo 'alias l='ls -la' >> ~/.bashrc",
             "terraform -install-autocomplete"
     ]
